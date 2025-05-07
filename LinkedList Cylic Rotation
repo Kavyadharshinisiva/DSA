@@ -1,0 +1,83 @@
+import java.util.Scanner;
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class LinkedListCycleScanner {
+    public static boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null) return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+
+    
+    public static void createCycle(ListNode head, int pos) {
+        if (pos < 0) return;
+
+        ListNode cycleNode = null;
+        ListNode tail = head;
+        int index = 0;
+
+        while (tail.next != null) {
+            if (index == pos) {
+                cycleNode = tail;
+            }
+            tail = tail.next;
+            index++;
+        }
+
+        tail.next = cycleNode; 
+    }
+    public static ListNode buildList(int n, Scanner scanner) {
+        if (n <= 0) return null;
+
+        System.out.print("Enter value for node 1: ");
+        ListNode head = new ListNode(scanner.nextInt());
+        ListNode current = head;
+
+        for (int i = 2; i <= n; i++) {
+            System.out.print("Enter value for node " + i + ": ");
+            current.next = new ListNode(scanner.nextInt());
+            current = current.next;
+        }
+        return head;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter number of nodes: ");
+        int n = scanner.nextInt();
+
+        ListNode head = buildList(n, scanner);
+
+        System.out.print("Enter position to create cycle (-1 for no cycle): ");
+        int pos = scanner.nextInt();
+
+        createCycle(head, pos);
+
+        if (hasCycle(head)) {
+            System.out.println("Cycle detected in the linked list.");
+        } else {
+            System.out.println("No cycle in the linked list.");
+        }
+
+        scanner.close();
+    }
+}
